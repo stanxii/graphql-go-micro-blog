@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package go.micro.srv.article;
+
+service ArticleSrv {
+	rpc Total(TotalRequest) returns (TotalResponse) {}
+	rpc Articles(ArticlesRequest) returns (ArticlesResponse) {}
+	rpc Article(ArticleRequest) returns (ArticleResponse) {}
+	rpc CreateArticle(CreateArticleRequest) returns (ArticleResponse) {}
+	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
+	rpc PingPong(stream Ping) returns (stream Pong) {}
+}
+
+message TotalRequest {
+
+}
+
+message TotalResponse {
+	int64 total = 1;
+}
+
+message ArticlesRequest {
+	int64 page = 1;
+	int64 pageSize = 2;
+	ArticlesFilter filter = 3;
+}
+
+message ArticlesFilter {
+	// 文章标题
+	string title = 1;
+	// 文章是否删除
+	bool deleted = 2;
+	// 分类id
+	string categoryId = 3;
+	// 排序
+	bool asc = 4;
+}
+
+message ArticlesResponse {
+	repeated ArticleResponse articles = 1;
+}
+
+message ArticleResponse {
+	int64 id = 1;
+	string content = 2;
+	string title = 3;
+	string Excerpt = 4;
+	string createAt = 5;
+	string updateAt = 6;
+	int64  userId = 7;
+	repeated CategorysResponse categorys = 8;
+}
+
+message CategorysResponse {
+	int64 id = 1;
+	string name = 2;
+}
+
+message ArticleRequest {
+	int64 id = 1;
+}
+
+message CreateArticleRequest {
+	string title = 1;
+	string content = 2;
+	string Excerpt = 3;
+	int64 userId = 4;
+	repeated int64 categoryIds = 5;
+}
+
+message StreamingRequest {
+	int64 count = 1;
+}
+
+message StreamingResponse {
+	int64 count = 1;
+}
+
+message Ping {
+	int64 stroke = 1;
+}
+
+message Pong {
+	int64 stroke = 1;
+}

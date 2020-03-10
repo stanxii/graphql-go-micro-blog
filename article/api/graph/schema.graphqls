@@ -1,0 +1,70 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Article {
+  # 文章id
+  id: ID!
+  # 文章内容
+  content: String
+  # 文章标题
+  title: String
+  # 文章摘要
+  excerpt: String
+  user: User
+  createAt: Time
+  updateAt: Time
+  categorys: [Category]
+}
+
+extend type User @key(fields: "id") {
+  id: ID! @external
+}
+
+input ArticlesFilter {
+    #根据标题搜索
+    title: String
+    #根据分类ID
+    category: ID
+    #查找已删除的文章
+    deleted: Boolean
+    #是否使用升序
+    asc:     Boolean
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: ID
+  endCursor: ID
+}
+
+type ArticlesEdges {
+  node: Article
+}
+
+type Articles {
+  count: Int
+  pageInfo: PageInfo
+  edges: [ArticlesEdges]
+}
+
+extend type Query {
+  article(id: ID!): Article
+  articles(
+    first: Int = 10
+    after: String = "0"
+    filter: ArticlesFilter
+  ): Articles
+}
+
+type Category {
+  id: ID!
+  name: String
+}
+
+# Time is an RFC3339 timestamp.
+scalar Time
+
+#type Mutation {
+#}
