@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"api/graph"
 	"api/graph/generated"
 
@@ -11,16 +10,16 @@ import (
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro/v2/client"
 
+	_ "github.com/micro/go-plugins/registry/etcdv3/v2"
+
 	"github.com/micro/go-micro/v2/web"
 	articleProto "api/proto/article"
-	userProto "api/proto/user"
 )
+
 
 func main() {
 	service := web.NewService(
-		web.Name("go.micro.api.greeter"),
-		web.Version("latest"),
-		web.Address(":8086"),
+		web.Name("go.micro.api.article"),
 	)
 
 	if err := service.Init(); err != nil {
@@ -29,15 +28,16 @@ func main() {
 
 	// RPC client
 	articleClient := articleProto.NewArticleSrvService("go.micro.srv.article", client.DefaultClient)
-	userClient := userProto.NewUserSrvService("go.micro.srv.user", client.DefaultClient)
 
 	srv := handler.NewDefaultServer(
-		generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{
-			ArticleClient: articleClient,
-			UserClient:    userClient,
-		}}),
+		generated.NewExecutableSchema(generated.Config{
+			Resolvers:  &graph.Resolver{articleClient},
+			Directives: generated.DirectiveRoot{},
+			Complexity: generated.ComplexityRoot{},
+		}),
 	)
-	srv.Use(extension.FixedComplexityLimit(500))
+
+	//srv.Use(extension.FixedComplexityLimit(500))
 
 	service.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	service.Handle("/query", srv)
@@ -45,6 +45,5 @@ func main() {
 	// run service
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
-
 	}
 }

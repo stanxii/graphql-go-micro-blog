@@ -12,7 +12,9 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/micro/go-micro v1.18.0
-	github.com/micro/go-micro/v2 v2.1.0
+	github.com/micro/go-micro/v2 v2.1.2
+	github.com/micro/go-plugins v1.5.1 // indirect
+	github.com/micro/go-plugins/registry/etcdv3/v2 v2.0.3 // indirect
 	github.com/micro/protoc-gen-micro/v2 v2.0.0 // indirect
 	github.com/vektah/gqlparser/v2 v2.0.1
 	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect

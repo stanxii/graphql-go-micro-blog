@@ -9,7 +9,7 @@ proto: proto-article;
 
 .PHONY: build
 build: proto 
-	go build -o article-api *.go
+	CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o article-api server.go
 
 .PHONY: docker
 docker:

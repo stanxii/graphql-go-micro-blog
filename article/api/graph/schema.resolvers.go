@@ -32,7 +32,7 @@ func (r *queryResolver) Article(ctx context.Context, id string) (*model.Article,
 
 	categoryMap := make([]*model.Category, len(articleRes.Categorys))
 	for categoryKey, categoryValue := range articleRes.Categorys {
-		_categoryId, err := graphql.UnmarshalID(categoryValue.Id)
+		_categoryId, err := graphql.UnmarshalID(int(categoryValue.Id))
 		if err != nil {
 			return nil, err
 		}
@@ -43,6 +43,7 @@ func (r *queryResolver) Article(ctx context.Context, id string) (*model.Article,
 	}
 
 	_userId, err := graphql.UnmarshalString(int(articleRes.UserId))
+
 	User, err := r.Entity().FindUserByID(ctx, _userId)
 
 	return &model.Article{
@@ -80,8 +81,8 @@ func (r *queryResolver) Articles(ctx context.Context, first *int, after *string,
 	articlesEdges := make([]*model.ArticlesEdges, len(res.Articles))
 
 	for key, value := range res.Articles {
-		_id, _ := graphql.UnmarshalID(value.Id)
-		_userId, _ := graphql.UnmarshalString(int(value.UserId));
+		_id, _ := graphql.UnmarshalID(int(value.Id))
+		_userId, _ := graphql.UnmarshalString(int(value.UserId))
 		user, _ := r.Entity().FindUserByID(ctx, _userId)
 		_createAt, err := time.ParseInLocation("2006-01-02 15:04:05", value.CreateAt, time.Local)
 		_updateAt, err := time.ParseInLocation("2006-01-02 15:04:05", value.UpdateAt, time.Local)
@@ -90,7 +91,7 @@ func (r *queryResolver) Articles(ctx context.Context, first *int, after *string,
 		}
 		categoryMap := make([]*model.Category, len(value.Categorys))
 		for categoryKey, categoryValue := range value.Categorys {
-			_categoryId, err := graphql.UnmarshalID(categoryValue.Id)
+			_categoryId, err := graphql.UnmarshalID(int(categoryValue.Id))
 			if err != nil {
 				return nil, err
 			}
@@ -119,8 +120,8 @@ func (r *queryResolver) Articles(ctx context.Context, first *int, after *string,
 		return nil, err
 	}
 
-	startCursor, err := graphql.UnmarshalString(res.Articles[0].Id)
-	endCursor, err := graphql.UnmarshalString(res.Articles[len(res.Articles)-1].Id)
+	startCursor, err := graphql.UnmarshalString(int(res.Articles[0].Id))
+	endCursor, err := graphql.UnmarshalString(int(res.Articles[len(res.Articles)-1].Id))
 	if err != nil {
 		return nil, err
 	}
@@ -132,8 +133,8 @@ func (r *queryResolver) Articles(ctx context.Context, first *int, after *string,
 			StartCursor:     &startCursor,
 			EndCursor:       &endCursor,
 		},
-		Count:    &_count,
-		Edges:    articlesEdges,
+		Count: &_count,
+		Edges: articlesEdges,
 	}, nil
 }
 

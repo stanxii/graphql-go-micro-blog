@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/99designs/gqlgen/graphql/handler/extension"
+	//"github.com/99designs/gqlgen/graphql/handler/extension"
 	"api/graph"
 	"api/graph/generated"
 
@@ -30,9 +30,14 @@ func main() {
 	userClient := userProto.NewUserSrvService("go.micro.srv.user", client.DefaultClient)
 
 	srv := handler.NewDefaultServer(
-		generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{UserClient: userClient}}),
+		generated.NewExecutableSchema(
+			generated.Config{
+				Resolvers: &graph.Resolver{UserClient: userClient},
+			},
+		),
 	)
-	srv.Use(extension.FixedComplexityLimit(500))
+
+	//srv.Use(extension.FixedComplexityLimit(500))
 
 	service.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	service.Handle("/query", srv)
