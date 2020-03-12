@@ -9,7 +9,7 @@ proto:
 .PHONY: build
 build: proto
 
-	go build -o user-srv *.go
+	CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o user-srv cmd/main.go
 
 .PHONY: test
 test:

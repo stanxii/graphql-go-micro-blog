@@ -1,7 +1,13 @@
 {
+  "scripts": {
+    "start": "pm2 start server.js -i 1",
+    "restart": "pm2 restart server",
+    "stop": "pm2 stop server"
+  },
   "dependencies": {
     "@apollo/gateway": "^0.13.2",
     "apollo-server": "^2.11.0",
-    "graphql": "^14.6.0"
+    "graphql": "^14.6.0",
+    "pm2": "^4.2.3"
   }
 }

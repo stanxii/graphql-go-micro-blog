@@ -3,6 +3,34 @@ networks:
   byfn:
 
 services:
+  user-api:
+    depends_on:
+      - etcd1
+      - etcd2
+      - etcd3
+    build: ./user/api
+    ports:
+      - 9091:9091
+    environment:
+      MICRO_SERVER_ADDRESS: ":9091"
+      MICRO_REGISTRY: "etcd"
+      MICRO_REGISTRY_ADDRESS: "etcd1:2379,etcd2:2379,etcd3:2379"
+    networks:
+      - byfn
+
+  user-srv:
+    depends_on:
+      - etcd1
+      - etcd2
+      - etcd3
+    build: ./user/srv
+    environment:
+      MICRO_SERVER_ADDRESS: ":9091"
+      MICRO_REGISTRY: "etcd"
+      MICRO_REGISTRY_ADDRESS: "etcd1:2379,etcd2:2379,etcd3:2379"
+    networks:
+      - byfn
+
   article-api:
     depends_on:
       - etcd1

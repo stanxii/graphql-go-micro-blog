@@ -6,7 +6,7 @@ proto:
 
 .PHONY: build
 build: proto
-	go build -o user-api *.go
+	CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o user-api server.go
 
 .PHONY: docker
 docker:
