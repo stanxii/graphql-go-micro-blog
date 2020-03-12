@@ -1,6 +1,6 @@
 article/srv/config.yml
 user/srv/config.yml
-gteway/node_modules
+gateway/node_modules
 /article/api/article-api
 /article/srv/article-srv
 /user/srv/user-api
